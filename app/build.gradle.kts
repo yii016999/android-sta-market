@@ -105,4 +105,4 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     // navigation component for Compose
     implementation(libs.androidx.navigation.compose)
-}
+    testImplementation(libs.kotlin.test)}

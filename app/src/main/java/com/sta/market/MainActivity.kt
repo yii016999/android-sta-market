@@ -22,6 +22,7 @@ import com.sta.market.presentation.login.LoginScreen
 import com.sta.market.ui.theme.StaMarketTheme
 import kotlinx.coroutines.delay
 
+private const val GREETING_DELAY_MILLIS = 3000L
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +54,7 @@ fun AppNavigation() {
 fun GreetingScreen(navController: NavHostController) {
     // Delay for 3 seconds before navigating to the login screen
     LaunchedEffect(Unit) {
-        delay(3000)
+        delay(GREETING_DELAY_MILLIS)
         navController.navigate(Routes.LOGIN) {
             // Disable back to the greeting screen
             popUpTo("greeting") { inclusive = true }

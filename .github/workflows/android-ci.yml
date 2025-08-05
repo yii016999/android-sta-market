@@ -1,0 +1,41 @@
+# Project name: android-sta-market CI Workflow
+# ./gradlew lint testDebug detekt
+on:
+  push:
+    branches: [ "master", "dev", "feature/**" ]
+  pull_request:
+    branches: [ "master", "dev"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ================= Checkout Repo =================
+        uses: actions/checkout@v4
+
+      - name: ================= Set up JDK 17 =================
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: ================= Set up Android SDK =================
+        uses: android-actions/setup-android@v3
+
+      - name: ================= Set up Gradle + Enable Caching =================
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: wrapper
+
+      - name: ================= Grant execute permission to gradlew =================
+        run: chmod +x ./gradlew
+
+      - name: ============== Run Lint + Unit Tests ==============
+        run: ./gradlew lint testDebug
+
+      - name: ============== Run Detekt ==============
+        run: ./gradlew detekt
+
+      - name: ============== Check CI Success ==============
+        run: echo "Done, CI Finished"

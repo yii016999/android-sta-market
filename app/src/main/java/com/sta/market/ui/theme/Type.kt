@@ -1,4 +1,4 @@
-package com.sta.stamarket.ui.theme
+package com.sta.market.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.sta.stamarket
+package com.sta.market
 
 import org.junit.Test
 

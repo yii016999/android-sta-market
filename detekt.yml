@@ -1,0 +1,54 @@
+# Build Settings
+build:
+  maxIssues: 0                                      # CI will fail if any issue is found
+  weights:                                          # Weighting of different issue types
+    complexity: 2                                   # Complexity violations are more severe
+    LongParameterList: 1
+    style: 1
+
+# Naming Rules
+naming:
+  FunctionNaming:
+    active: true
+    functionPattern: '^([a-z]|`.*`)[a-zA-Z0-9]*$'   # Enforces camelCase for function names
+    ignoreAnnotated:
+      - Composable                                  # Allows capitalized function names when annotated with @Composable
+
+
+# Style Rules
+style:
+  MagicNumber:
+    active: true
+    ignoreAnnotated:
+      - SuppressMagicNumber                         # Skip rule if @Suppress("MagicNumber") is present
+    ignoreNumbers: [-1, 0, 1, 2]                    # Allow common values without warnings
+    ignoreHashCodeFunction: true                    # Allow magic numbers in hashCode() implementations
+    ignorePropertyDeclaration: true                 # Allow literals in val/var declarations (e.g., Color constants)
+    ignoreCompanionObjectPropertyDeclaration: true  # Same as above, but inside companion objects
+    ignoreEnums: true                               # Allow literals in enum constants
+
+  WildcardImport:
+    active: false                                   # Allows wildcard imports (e.g., import android.*)
+
+  ReturnCount:
+    max: 3                                          # Limit number of return statements in a function
+
+  MaxLineLength:
+    active: true
+    maxLineLength: 140                              # Enforce a soft max line length of 140 characters
+
+# Complexity Rules
+complexity:
+  LongMethod:
+    active: true
+    threshold: 30                                   # Warn if function exceeds 30 lines
+    ignoreAnnotated:
+      - Composable                                  # Skip length check for @Composable functions
+
+  LargeClass:
+    active: true
+    threshold: 600                                  # Warn if class exceeds 600 lines
+
+  NestedBlockDepth:
+    active: true
+    threshold: 4                                    # Warn if nesting (if/for/when) exceeds 4 levels

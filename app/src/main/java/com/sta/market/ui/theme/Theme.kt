@@ -1,6 +1,5 @@
-package com.sta.stamarket.ui.theme
+package com.sta.market.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

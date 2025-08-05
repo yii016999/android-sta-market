@@ -1,3 +1,13 @@
 <resources>
+    <!--  CAT Common  -->
     <string name="app_name">StaMarket</string>
+
+    <!--  CAT LoginScreen  -->
+    <string name="login_screen_login_title">Login</string>
+    <string name="login_screen_account_title">Account</string>
+    <string name="login_screen_secret_title">Password</string>
+    <string name="login_screen_text_input_account_hint">Please input your account</string>">
+    <string name="login_screen_text_input_secret_hint">Please input your password</string>">
+    <string name="login_screen_forget_password">Forget password?</string>">
+    <string name="login_screen_register">Register</string>">
 </resources>

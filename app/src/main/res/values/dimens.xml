@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  CAT Common  -->
+    <dimen name="loading_indicator_size">20dp</dimen>
+    <!--  CAT LoginScreen  -->
+    <dimen name="login_horizontal_padding">24dp</dimen>
+    <dimen name="login_title_vertical_spacing">40dp</dimen>
+    <dimen name="login_text_input_padding_bottom">30dp</dimen>
+    <dimen name="login_title_font_size">26sp</dimen>
+    <dimen name="login_subtitle_font_size">16sp</dimen>
+    <dimen name="login_error_hint_size">14sp</dimen>
+    <dimen name="login_title_description_padding">15dp</dimen>
+</resources>

@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,11 +30,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sta.market.R
 import com.sta.market.ui.theme.StaMarketTheme
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
+    // State to hold the UI state
+    val uiState by viewModel.uiState.collectAsState()
     // State to hold the user's account & secret
     var account by remember { mutableStateOf("") }
     var secret by remember { mutableStateOf("") }
@@ -134,14 +140,21 @@ fun LoginScreen() {
         }
 
         // Login error hint
-        Text(
-            text = "error hint",
-            color = Color.Red,
-            fontSize = dimensionResource(R.dimen.login_error_hint_size).value.sp,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = dimensionResource(id = R.dimen.login_text_input_padding_bottom))
-        )
+        when (uiState) {
+            is LoginUiState.Error -> {
+                val message = (uiState as LoginUiState.Error).message
+                Text(
+                    text = message,
+                    color = Color.Red,
+                    fontSize = dimensionResource(R.dimen.login_error_hint_size).value.sp,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = dimensionResource(id = R.dimen.login_text_input_padding_bottom))
+                )
+            }
+
+            else -> {}
+        }
 
         // Login button
         Button(
@@ -150,12 +163,17 @@ fun LoginScreen() {
                 containerColor = colorResource(id = R.color.color_53b175)
             ),
             modifier = Modifier.fillMaxWidth()
-
         ) {
-            Text(
-                stringResource(R.string.login_screen_login_title),
-                fontWeight = FontWeight.Bold
-            )
+            if (uiState is LoginUiState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.loading_indicator_size))
+                )
+            } else {
+                Text(
+                    stringResource(R.string.login_screen_login_title),
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

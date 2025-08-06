@@ -37,6 +37,11 @@ style:
     active: true
     maxLineLength: 140                              # Enforce a soft max line length of 140 characters
 
+# Performance Rules
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+
 # Complexity Rules
 complexity:
   LongMethod:

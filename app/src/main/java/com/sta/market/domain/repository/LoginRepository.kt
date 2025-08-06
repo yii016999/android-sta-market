@@ -1,9 +1,8 @@
 package com.sta.market.domain.repository
 
-import com.sta.market.domain.model.Email
-import com.sta.market.domain.model.LoginResult
-import com.sta.market.domain.model.Password
+import com.sta.market.domain.model.LoginParam
+import com.sta.market.domain.result.LoginResult
 
 interface LoginRepository {
-    suspend fun login(email: Email, password: Password): LoginResult
+    suspend fun login(loginParam: LoginParam): LoginResult
 }

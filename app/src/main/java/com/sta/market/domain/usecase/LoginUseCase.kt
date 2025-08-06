@@ -1,12 +1,11 @@
 package com.sta.market.domain.usecase
 
-import com.sta.market.domain.model.Email
-import com.sta.market.domain.model.LoginResult
-import com.sta.market.domain.model.Password
+import com.sta.market.domain.model.LoginParam
 import com.sta.market.domain.repository.LoginRepository
+import com.sta.market.domain.result.LoginResult
 
 class LoginUseCase(private val repository: LoginRepository) {
-    suspend operator fun invoke(email: Email, password: Password): LoginResult {
-        return repository.login(email, password)
+    suspend operator fun invoke(loginParam: LoginParam): LoginResult {
+        return repository.login(loginParam)
     }
 }

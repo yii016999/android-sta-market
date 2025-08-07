@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 
 @Composable
-fun ForgetPasswordScreen(navController: NavHostController) {
+fun ForgetPasswordScreen(@Suppress("UNUSED_PARAMETER") navController: NavHostController) {
     // Temporary placeholder for forget password screen
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Forget Password Screen")

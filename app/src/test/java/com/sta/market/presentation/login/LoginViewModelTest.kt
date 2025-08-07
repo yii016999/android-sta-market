@@ -4,8 +4,6 @@ import com.sta.market.TestConstants.TEST_EMAIL
 import com.sta.market.TestConstants.TEST_PASSWORD
 import com.sta.market.TestConstants.TEST_WRONG_EMAIL
 import com.sta.market.TestConstants.TEST_WRONG_PASSWORD
-import com.sta.market.domain.model.Email
-import com.sta.market.domain.model.Password
 import com.sta.market.domain.repository.FakeLoginRepository
 import com.sta.market.domain.usecase.LoginUseCase
 import junit.framework.TestCase.assertTrue
@@ -53,8 +51,8 @@ class LoginViewModelTest {
     @Test
     fun `when login starts, uiState should go from Idle to Loading to Success`() = runTest(testDispatcher) {
         // Given
-        val email = Email(TEST_EMAIL)
-        val password = Password(TEST_PASSWORD)
+        val email = TEST_EMAIL
+        val password = TEST_PASSWORD
         val states = mutableListOf<LoginUiState>()
 
         // Collect the states
@@ -80,8 +78,8 @@ class LoginViewModelTest {
     @Test
     fun `when login success, uiState should be Success`() = runTest {
         // Given
-        val email = Email(TEST_EMAIL)
-        val password = Password(TEST_PASSWORD)
+        val email = TEST_EMAIL
+        val password = TEST_PASSWORD
 
         // When
         viewModel.login(email, password)
@@ -95,8 +93,8 @@ class LoginViewModelTest {
     @Test
     fun `when login with wrong credentials, uiState should be Error with invalid credentials message`() = runTest {
         // Given
-        val email = Email(TEST_WRONG_EMAIL)
-        val password = Password(TEST_WRONG_PASSWORD)
+        val email = TEST_WRONG_EMAIL
+        val password = TEST_WRONG_PASSWORD
 
         // When
         viewModel.login(email, password)
@@ -112,8 +110,8 @@ class LoginViewModelTest {
         // Given
         fakeLoginRepository.shouldFail = true
         fakeLoginRepository.failureType = FakeLoginRepository.FailureType.ACCOUNT_LOCKED
-        val email = Email(TEST_EMAIL)
-        val password = Password(TEST_PASSWORD)
+        val email = TEST_EMAIL
+        val password = TEST_PASSWORD
 
         // When
         viewModel.login(email, password)
@@ -129,8 +127,8 @@ class LoginViewModelTest {
         // Given
         fakeLoginRepository.shouldFail = true
         fakeLoginRepository.failureType = FakeLoginRepository.FailureType.NETWORK_ERROR
-        val email = Email(TEST_EMAIL)
-        val password = Password(TEST_PASSWORD)
+        val email = TEST_EMAIL
+        val password = TEST_PASSWORD
 
         // When
         viewModel.login(email, password)
@@ -146,8 +144,8 @@ class LoginViewModelTest {
         // Given
         fakeLoginRepository.shouldFail = true
         fakeLoginRepository.failureType = FakeLoginRepository.FailureType.UNKNOWN_ERROR
-        val email = Email(TEST_EMAIL)
-        val password = Password(TEST_PASSWORD)
+        val email = TEST_EMAIL
+        val password = TEST_PASSWORD
 
         // When
         viewModel.login(email, password)

@@ -2,9 +2,7 @@ package com.sta.market.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sta.market.domain.model.Email
 import com.sta.market.domain.model.LoginParam
-import com.sta.market.domain.model.Password
 import com.sta.market.domain.result.LoginResult
 import com.sta.market.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +18,7 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
     private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    fun login(email: Email, password: Password) {
+    fun login(email: String, password: String) {
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
 

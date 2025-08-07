@@ -12,8 +12,6 @@ import com.sta.market.TestConstants.TEST_EMAIL
 import com.sta.market.TestConstants.TEST_PASSWORD
 import com.sta.market.TestConstants.TEST_WRONG_EMAIL
 import com.sta.market.TestConstants.TEST_WRONG_PASSWORD
-import com.sta.market.domain.model.Email
-import com.sta.market.domain.model.Password
 import com.sta.market.presentation.login.LoginUiState
 import com.sta.market.presentation.login.LoginViewModel
 import com.sta.market.ui.theme.StaMarketTheme
@@ -126,7 +124,7 @@ class LoginScreenTest {
         composeTestRule.onNodeWithTag("LoginButton").performClick()
 
         // Then
-        verify { mockViewModel.login(Email(TEST_EMAIL), Password(TEST_PASSWORD)) }
+        verify { mockViewModel.login(TEST_EMAIL, TEST_PASSWORD) }
     }
 
     @Test
@@ -242,7 +240,7 @@ class LoginScreenTest {
         composeTestRule.onNodeWithTag("LoginButton").performClick()
 
         // Then
-        verify { mockViewModel.login(Email(""), Password("")) }
+        verify { mockViewModel.login("", "") }
     }
 
     @Test
@@ -267,6 +265,6 @@ class LoginScreenTest {
         composeTestRule.onNodeWithTag("LoginButton").performClick()
 
         // Then
-        verify { mockViewModel.login(Email(TEST_WRONG_EMAIL), Password(TEST_WRONG_PASSWORD)) }
+        verify { mockViewModel.login(TEST_WRONG_EMAIL, TEST_WRONG_PASSWORD) }
     }
 }

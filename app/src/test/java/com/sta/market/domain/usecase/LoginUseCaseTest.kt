@@ -4,9 +4,7 @@ import com.sta.market.TestConstants.TEST_EMAIL
 import com.sta.market.TestConstants.TEST_PASSWORD
 import com.sta.market.TestConstants.TEST_WRONG_EMAIL
 import com.sta.market.TestConstants.TEST_WRONG_PASSWORD
-import com.sta.market.domain.model.Email
 import com.sta.market.domain.model.LoginParam
-import com.sta.market.domain.model.Password
 import com.sta.market.domain.repository.FakeLoginRepository
 import com.sta.market.domain.result.LoginResult
 import kotlinx.coroutines.test.runTest
@@ -29,8 +27,8 @@ class LoginUseCaseTest {
     @Test
     fun `login with correct credentials returns success`() = runTest {
         // Given
-        val email = Email(TEST_EMAIL)
-        val password = Password(TEST_PASSWORD)
+        val email = TEST_EMAIL
+        val password = TEST_PASSWORD
         val loginParam = LoginParam(email, password)
 
         // When
@@ -43,8 +41,8 @@ class LoginUseCaseTest {
     @Test
     fun `login with incorrect credentials returns invalid credentials`() = runTest {
         // Given
-        val email = Email(TEST_WRONG_EMAIL)
-        val password = Password(TEST_WRONG_PASSWORD)
+        val email = TEST_WRONG_EMAIL
+        val password = TEST_WRONG_PASSWORD
         val loginParam = LoginParam(email, password)
 
         // When
@@ -59,8 +57,8 @@ class LoginUseCaseTest {
         // Given
         fakeRepository.shouldFail = true
         fakeRepository.failureType = FakeLoginRepository.FailureType.ACCOUNT_LOCKED
-        val email = Email(TEST_EMAIL)
-        val password = Password(TEST_PASSWORD)
+        val email = TEST_EMAIL
+        val password = TEST_PASSWORD
         val loginParam = LoginParam(email, password)
 
         // When
@@ -75,8 +73,8 @@ class LoginUseCaseTest {
         // Given
         fakeRepository.shouldFail = true
         fakeRepository.failureType = FakeLoginRepository.FailureType.NETWORK_ERROR
-        val email = Email(TEST_EMAIL)
-        val password = Password(TEST_PASSWORD)
+        val email = TEST_EMAIL
+        val password = TEST_PASSWORD
         val loginParam = LoginParam(email, password)
 
         // When
@@ -91,8 +89,8 @@ class LoginUseCaseTest {
         // Given
         fakeRepository.shouldFail = true
         fakeRepository.failureType = FakeLoginRepository.FailureType.UNKNOWN_ERROR
-        val email = Email(TEST_EMAIL)
-        val password = Password(TEST_PASSWORD)
+        val email = TEST_EMAIL
+        val password = TEST_PASSWORD
         val loginParam = LoginParam(email, password)
 
         // When

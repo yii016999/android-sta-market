@@ -33,8 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sta.market.R
-import com.sta.market.domain.model.Email
-import com.sta.market.domain.model.Password
 import com.sta.market.presentation.login.LoginUiState
 import com.sta.market.presentation.login.LoginViewModel
 import com.sta.market.ui.theme.StaMarketTheme
@@ -171,7 +169,7 @@ fun LoginScreen(
 
         // Login button
         Button(
-            onClick = { viewModel.login(Email(email), Password(password)) },
+            onClick = { viewModel.login(email, password) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(id = R.color.color_53b175)
             ),

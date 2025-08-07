@@ -30,7 +30,7 @@ class FakeLoginRepository : LoginRepository {
                 FailureType.UNKNOWN_ERROR -> LoginResult.UnknownError("Fake Unknown Error")
             }
 
-            loginParam.email.value == TEST_EMAIL && loginParam.password.value == TEST_PASSWORD -> {
+            loginParam.email == TEST_EMAIL && loginParam.password == TEST_PASSWORD -> {
                 LoginResult.Success(TEST_ID)
             }
 

@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 
 @Composable
-fun RegisterScreen(navController: NavHostController) {
+fun RegisterScreen(@Suppress("UNUSED_PARAMETER") navController: NavHostController) {
     // Temporary placeholder for register screen
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Register Screen")

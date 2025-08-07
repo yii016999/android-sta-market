@@ -18,7 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.sta.market.HiltTestRunner"
     }
 
     buildTypes {
@@ -30,34 +30,43 @@ android {
             )
         }
     }
-    // java 17 is required for Compose
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
     composeCompiler {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
         stabilityConfigurationFile =
             rootProject.layout.projectDirectory.file("stability_config.conf")
     }
-    // Enable Compose
+
     buildFeatures {
         compose = true
     }
+
     hilt {
         enableAggregatingTask = false
     }
+
     lint {
         checkTestSources = false
-        // avoid known Lint bug when analyzing test code; can re-enable when issue is fixed
         checkDependencies = true
+    }
+
+    packaging {
+        resources {
+            excludes += "META-INF/LICENSE*"
+            excludes += "META-INF/NOTICE*"
+        }
     }
 }
 
-// Configure Detekt for static code analysis
 detekt {
     config.setFrom("$rootDir/detekt.yml")
     buildUponDefaultConfig = true
@@ -70,39 +79,58 @@ kotlin {
 }
 
 dependencies {
-    // Core libraries
+    // Core Android libraries
     implementation(libs.androidx.core.ktx)
-    // lifecycle and viewmodel libraries
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    // Compose libraries
     implementation(libs.androidx.activity.compose)
-    // use bom for Compose to manage versions
-    androidTestImplementation(platform(libs.androidx.compose.bom))
+
+    // Compose - managed by BOM
     implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.window.size)
-    // unit testing libraries
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.turbine)
-    // ui testing libraries
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    // debugging and tooling libraries
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    // hilt for dependency injection
+
+    // Dependency Injection - Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
-    // coroutines for asynchronous programming
+
+    // Coroutines - now using unified version
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    // navigation component for Compose
+
+    // Navigation
     implementation(libs.androidx.navigation.compose)
-    testImplementation(libs.kotlin.test)}
+
+    // Unit Testing
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+
+    // Android UI Testing
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.mockk.android)
+
+    // Hilt Testing - now uses same version as main Hilt
+    androidTestImplementation(libs.hilt.android.testing)
+    kaptAndroidTest(libs.hilt.compiler.testing)
+
+    // Android Testing Infrastructure
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.rules)
+
+    // Navigation Testing (optional - remove if not needed)
+    androidTestImplementation(libs.androidx.navigation.testing)
+
+    // Debug Tools
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+}

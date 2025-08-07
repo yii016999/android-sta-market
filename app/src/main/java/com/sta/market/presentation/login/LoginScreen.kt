@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -32,15 +33,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sta.market.R
+import com.sta.market.domain.model.Email
+import com.sta.market.domain.model.Password
 import com.sta.market.ui.theme.StaMarketTheme
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
     // State to hold the UI state
     val uiState by viewModel.uiState.collectAsState()
-    // State to hold the user's account & secret
-    var account by remember { mutableStateOf("") }
-    var secret by remember { mutableStateOf("") }
+    // State to hold the user's email & secret
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -58,22 +61,23 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
             fontWeight = FontWeight.Bold
         )
 
-        // Title Account
+        // Title Email
         Text(
-            text = stringResource(R.string.login_screen_account_title),
+            text = stringResource(R.string.login_screen_email_title),
             fontSize = dimensionResource(id = R.dimen.login_subtitle_font_size).value.sp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             fontWeight = FontWeight.Bold
         )
 
-        // TextInput Account
+        // TextInput Email
         TextField(
-            value = account,
-            onValueChange = { account = it },
-            label = { Text(stringResource(R.string.login_screen_text_input_account_hint)) },
+            value = email,
+            onValueChange = { email = it },
+            label = { Text(stringResource(R.string.login_screen_text_input_email_hint)) },
             modifier = Modifier
                 .padding(bottom = dimensionResource(id = R.dimen.login_text_input_padding_bottom))
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .testTag("emailInput"),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,    // When the text field is focused
                 unfocusedContainerColor = Color.Transparent,  // When the text field is not focused
@@ -86,7 +90,7 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
         // Title Password
         Text(
-            text = stringResource(R.string.login_screen_secret_title),
+            text = stringResource(R.string.login_screen_password_title),
             fontSize = dimensionResource(id = R.dimen.login_subtitle_font_size).value.sp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
             fontWeight = FontWeight.Bold
@@ -94,12 +98,13 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
         // TextInput Password
         TextField(
-            value = secret,
-            onValueChange = { secret = it },
-            label = { Text(stringResource(R.string.login_screen_text_input_secret_hint)) },
+            value = password,
+            onValueChange = { password = it },
+            label = { Text(stringResource(R.string.login_screen_text_input_password_hint)) },
             modifier = Modifier
                 .padding(bottom = dimensionResource(id = R.dimen.login_text_input_padding_bottom))
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .testTag("PasswordInput"),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,    // When the text field is focused
                 unfocusedContainerColor = Color.Transparent,  // When the text field is not focused
@@ -158,11 +163,13 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
 
         // Login button
         Button(
-            onClick = { /** Handle login button click */ },
+            onClick = { viewModel.login(Email(email), Password(password)) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(id = R.color.color_53b175)
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("LoginButton")
         ) {
             if (uiState is LoginUiState.Loading) {
                 CircularProgressIndicator(

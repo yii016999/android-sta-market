@@ -5,7 +5,10 @@ const val PASSWORD_MIN_LENGTH = 6
 @JvmInline
 value class Password(val value: String) {
     init {
-        require(value.isNotBlank()) { "Password cannot be blank." }
-        require(value.length >= PASSWORD_MIN_LENGTH) { "Password must be at least 6 characters long." }
+        // Only validate format if not empty
+        // Let the business logic layer handle empty validation
+        if (value.isNotBlank()) {
+            require(value.length >= PASSWORD_MIN_LENGTH) { "Password must be at least $PASSWORD_MIN_LENGTH characters long." }
+        }
     }
 }

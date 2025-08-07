@@ -18,12 +18,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sta.market.navigation.Routes
-import com.sta.market.presentation.login.LoginScreen
+import com.sta.market.presentation.screens.ForgetPasswordScreen
+import com.sta.market.presentation.screens.LoginScreen
+import com.sta.market.presentation.screens.RegisterScreen
 import com.sta.market.ui.theme.StaMarketTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
 private const val GREETING_DELAY_MILLIS = 3000L
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +44,29 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "greeting") {
+    // Navigation graph, initial screen is the "greeting screen"
+    NavHost(navController = navController, startDestination = Routes.GREETING) {
         composable(Routes.GREETING) {
             GreetingScreen(navController)
         }
+
         composable(Routes.LOGIN) {
-            LoginScreen()
+            LoginScreen(
+                onNavigateToForgetPassword = {
+                    navController.navigate(Routes.FORGET_PASSWORD)
+                },
+                onNavigateToRegister = {
+                    navController.navigate(Routes.REGISTER)
+                }
+            )
+        }
+
+        composable(Routes.FORGET_PASSWORD) {
+            ForgetPasswordScreen(navController)
+        }
+
+        composable(Routes.REGISTER) {
+            RegisterScreen(navController)
         }
     }
 }
@@ -57,7 +78,7 @@ fun GreetingScreen(navController: NavHostController) {
         delay(GREETING_DELAY_MILLIS)
         navController.navigate(Routes.LOGIN) {
             // Disable back to the greeting screen
-            popUpTo("greeting") { inclusive = true }
+            popUpTo(Routes.GREETING) { inclusive = true }
         }
     }
 

@@ -3,8 +3,9 @@ package com.sta.market.domain.model
 @JvmInline
 value class Email(val value: String) {
     init {
-        require(value.isNotBlank()) { "Email cannot be blank." }
-        require(EMAIL_REGEX.matches(value)) { "Invalid email format." }
+        if (value.isNotBlank()) {
+            require(EMAIL_REGEX.matches(value)) { "Invalid email format." }
+        }
     }
 
     companion object {

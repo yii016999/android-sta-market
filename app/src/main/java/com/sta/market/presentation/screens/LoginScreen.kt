@@ -1,4 +1,4 @@
-package com.sta.market.presentation.login
+package com.sta.market.presentation.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,10 +35,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sta.market.R
 import com.sta.market.domain.model.Email
 import com.sta.market.domain.model.Password
+import com.sta.market.presentation.login.LoginUiState
+import com.sta.market.presentation.login.LoginViewModel
 import com.sta.market.ui.theme.StaMarketTheme
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
+fun LoginScreen(
+    viewModel: LoginViewModel = hiltViewModel(),
+    onNavigateToForgetPassword: () -> Unit = {},
+    onNavigateToRegister: () -> Unit = {}
+) {
     // State to hold the UI state
     val uiState by viewModel.uiState.collectAsState()
     // State to hold the user's email & secret
@@ -126,8 +132,9 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                 color = Color.Blue,
                 modifier = Modifier
                     .padding(bottom = dimensionResource(id = R.dimen.login_text_input_padding_bottom))
+                    .testTag("forgetPasswordText")
                     .clickable {
-                        // Handle forget password click
+                        onNavigateToForgetPassword()
                     }
             )
 
@@ -138,8 +145,9 @@ fun LoginScreen(viewModel: LoginViewModel = hiltViewModel()) {
                 color = Color.Blue,
                 modifier = Modifier
                     .padding(bottom = dimensionResource(id = R.dimen.login_text_input_padding_bottom))
+                    .testTag("registerText")
                     .clickable {
-                        // Handle Register click
+                        onNavigateToRegister()
                     }
             )
         }

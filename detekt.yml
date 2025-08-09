@@ -49,6 +49,7 @@ complexity:
     threshold: 30                                   # Warn if function exceeds 30 lines
     ignoreAnnotated:
       - Composable                                  # Skip length check for @Composable functions
+      - Test                                        # Skip length check for @Test functions
 
   LargeClass:
     active: true

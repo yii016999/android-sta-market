@@ -2,7 +2,6 @@ package com.sta.market.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sta.market.domain.model.LoginParam
 import com.sta.market.domain.result.LoginResult
 import com.sta.market.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,10 +18,16 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     fun login(email: String, password: String) {
+
+        if (!isValidEmail(email)) {
+            _uiState.value = LoginUiState.Error("Account or Password is not correct")
+            return
+        }
+
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
 
-            val result = loginUseCase(LoginParam(email, password))
+            val result = loginUseCase(email, password)
 
             _uiState.value = when (result) {
                 is LoginResult.Success -> LoginUiState.Success
@@ -32,5 +37,12 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                 is LoginResult.UnknownError -> LoginUiState.Error("Login Error：${result.message}")
             }
         }
+    }
+
+    private fun isValidEmail(raw: String): Boolean {
+        val email = raw.trim()
+        if (email.isEmpty()) return false
+        val regex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+        return regex.matches(email)
     }
 }

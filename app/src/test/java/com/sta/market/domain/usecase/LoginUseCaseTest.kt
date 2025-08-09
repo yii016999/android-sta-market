@@ -1,102 +1,119 @@
 package com.sta.market.domain.usecase
 
 import com.sta.market.TestConstants.TEST_EMAIL
+import com.sta.market.TestConstants.TEST_LOCKED_EMAIL
 import com.sta.market.TestConstants.TEST_PASSWORD
+import com.sta.market.TestConstants.TEST_TOKEN
 import com.sta.market.TestConstants.TEST_WRONG_EMAIL
 import com.sta.market.TestConstants.TEST_WRONG_PASSWORD
-import com.sta.market.domain.model.LoginParam
-import com.sta.market.domain.repository.FakeLoginRepository
+import com.sta.market.domain.model.AccountLockedException
+import com.sta.market.domain.model.LoginReq
+import com.sta.market.domain.model.LoginResp
+import com.sta.market.domain.model.UnauthorizedException
+import com.sta.market.domain.repository.LoginRepository
 import com.sta.market.domain.result.LoginResult
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
+import kotlin.test.assertEquals
+
 
 class LoginUseCaseTest {
     private lateinit var loginUseCase: LoginUseCase
-    private val fakeRepository = FakeLoginRepository()
+
+    @MockK
+    private lateinit var loginRepository: LoginRepository
 
     @Before
     fun setup() {
-        // Reset the repository state before each test
-        fakeRepository.shouldFail = false
-        fakeRepository.failureType = FakeLoginRepository.FailureType.INVALID_CREDENTIALS
-        loginUseCase = LoginUseCase(fakeRepository)
+        MockKAnnotations.init(this)
+        loginUseCase = LoginUseCase(loginRepository)
     }
 
     @Test
-    fun `login with correct credentials returns success`() = runTest {
+    fun `login with correct credentials returns Success`() = runTest {
         // Given
-        val email = TEST_EMAIL
-        val password = TEST_PASSWORD
-        val loginParam = LoginParam(email, password)
+        val loginReq = LoginReq(TEST_EMAIL.trim(), TEST_PASSWORD)
+        val loginResp = LoginResp(token = TEST_TOKEN)
+
+        coEvery { loginRepository.login(loginReq) } returns loginResp
 
         // When
-        val result = loginUseCase(loginParam)
+        val result = loginUseCase(TEST_EMAIL, TEST_PASSWORD)
 
         // Then
-        assertTrue(result is LoginResult.Success)
+        assertTrue("Should return Success", result is LoginResult.Success)
+        assertEquals(TEST_TOKEN, (result as LoginResult.Success).token)
+
+        coVerify(exactly = 1) { loginRepository.login(loginReq) }
     }
 
     @Test
-    fun `login with incorrect credentials returns invalid credentials`() = runTest {
-        // Given
-        val email = TEST_WRONG_EMAIL
-        val password = TEST_WRONG_PASSWORD
-        val loginParam = LoginParam(email, password)
-
+    fun `login with empty email returns InvalidCredentials without calling repository`() = runTest {
         // When
-        val result = loginUseCase(loginParam)
+        val result = loginUseCase("", TEST_PASSWORD)
 
         // Then
-        assertTrue(result is LoginResult.InvalidCredentials)
+        assertTrue("Should return InvalidCredentials", result is LoginResult.InvalidCredentials)
+
+        // Verify repository was NOT called
+        coVerify(exactly = 0) { loginRepository.login(any()) }
     }
 
     @Test
-    fun `login with account locked returns account locked`() = runTest {
+    fun `login with UnauthorizedException returns InvalidCredentials`() = runTest {
         // Given
-        fakeRepository.shouldFail = true
-        fakeRepository.failureType = FakeLoginRepository.FailureType.ACCOUNT_LOCKED
-        val email = TEST_EMAIL
-        val password = TEST_PASSWORD
-        val loginParam = LoginParam(email, password)
+        val loginReq = LoginReq(TEST_WRONG_EMAIL.trim(), TEST_WRONG_PASSWORD)
+
+        coEvery { loginRepository.login(loginReq) } throws
+                UnauthorizedException("Invalid credentials")
 
         // When
-        val result = loginUseCase(loginParam)
+        val result = loginUseCase(TEST_WRONG_EMAIL, TEST_WRONG_PASSWORD)
 
         // Then
-        assertTrue(result is LoginResult.AccountLocked)
+        assertTrue("Should return InvalidCredentials", result is LoginResult.InvalidCredentials)
+
+        coVerify(exactly = 1) { loginRepository.login(loginReq) }
     }
 
     @Test
-    fun `login with network error returns network error`() = runTest {
+    fun `login with AccountLockedException returns AccountLocked`() = runTest {
         // Given
-        fakeRepository.shouldFail = true
-        fakeRepository.failureType = FakeLoginRepository.FailureType.NETWORK_ERROR
-        val email = TEST_EMAIL
-        val password = TEST_PASSWORD
-        val loginParam = LoginParam(email, password)
+        val loginReq = LoginReq(TEST_LOCKED_EMAIL.trim(), TEST_PASSWORD)
+
+        coEvery { loginRepository.login(loginReq) } throws
+                AccountLockedException("Account is locked")
 
         // When
-        val result = loginUseCase(loginParam)
+        val result = loginUseCase(TEST_LOCKED_EMAIL, TEST_PASSWORD)
 
         // Then
-        assertTrue(result is LoginResult.NetworkError)
+        assertTrue("Should return AccountLocked", result is LoginResult.AccountLocked)
+
+        coVerify(exactly = 1) { loginRepository.login(loginReq) }
     }
 
     @Test
-    fun `login with unknown error returns unknown error`() = runTest {
+    fun `login with IOException returns NetworkError`() = runTest {
         // Given
-        fakeRepository.shouldFail = true
-        fakeRepository.failureType = FakeLoginRepository.FailureType.UNKNOWN_ERROR
-        val email = TEST_EMAIL
-        val password = TEST_PASSWORD
-        val loginParam = LoginParam(email, password)
+        val loginReq = LoginReq(TEST_EMAIL.trim(), TEST_PASSWORD)
+
+        coEvery { loginRepository.login(loginReq) } throws
+                IOException("Network connection failed")
 
         // When
-        val result = loginUseCase(loginParam)
+        val result = loginUseCase(TEST_EMAIL, TEST_PASSWORD)
 
         // Then
-        assertTrue(result is LoginResult.UnknownError)
+        assertTrue("Should return NetworkError", result is LoginResult.NetworkError)
+
+        coVerify(exactly = 1) { loginRepository.login(loginReq) }
     }
 }

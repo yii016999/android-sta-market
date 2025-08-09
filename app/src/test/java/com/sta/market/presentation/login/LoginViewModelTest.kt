@@ -4,6 +4,7 @@ import com.sta.market.TestConstants.TEST_EMAIL
 import com.sta.market.TestConstants.TEST_PASSWORD
 import com.sta.market.TestConstants.TEST_TOKEN
 import com.sta.market.TestConstants.TEST_WRONG_EMAIL
+import com.sta.market.TestConstants.TEST_WRONG_FORMATE_EMAIL
 import com.sta.market.TestConstants.TEST_WRONG_PASSWORD
 import com.sta.market.domain.model.AccountLockedException
 import com.sta.market.domain.model.LoginReq
@@ -159,7 +160,9 @@ class LoginViewModelTest {
         val loginReq = LoginReq(TEST_EMAIL.trim(), TEST_PASSWORD)
 
         // Mock repository throw AccountLockedException
-        coEvery { loginRepository.login(loginReq) } throws AccountLockedException("Account is locked")
+        coEvery {
+            loginRepository.login(loginReq)
+        } throws AccountLockedException("Your account has been locked, Please contact the administrator")
 
         // When
         viewModel.login(TEST_EMAIL, TEST_PASSWORD)
@@ -304,7 +307,7 @@ class LoginViewModelTest {
         // UseCase should validate and return InvalidCredentials，not call Repository
 
         // When
-        viewModel.login(TEST_WRONG_EMAIL, TEST_PASSWORD)
+        viewModel.login(TEST_WRONG_FORMATE_EMAIL, TEST_PASSWORD)
         advanceUntilIdle()
 
         // Then

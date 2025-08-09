@@ -27,19 +27,24 @@ class LoginUseCase @Inject constructor(private val repository: LoginRepository) 
             LoginResult.Success(token = response.token)
 
         } catch (e: AccountLockedException) {
-            Log.e("LoginUseCase", "AccountLockedException: ${e.message}")
+            logError("LoginUseCase", e)
             LoginResult.AccountLocked
         } catch (e: UnauthorizedException) {
-            Log.e("LoginUseCase", "UnauthorizedException: ${e.message}")
+            logError("LoginUseCase", e)
             LoginResult.InvalidCredentials
         } catch (e: UnauthorizedException) {
-            Log.e("LoginUseCase", "UnauthorizedException: ${e.message}")
+            logError("LoginUseCase", e)
             LoginResult.InvalidCredentials
         } catch (e: IOException) {
             LoginResult.NetworkError("Network error: ${e.message}")
         } catch (e: Exception) {
             LoginResult.UnknownError(e.message ?: "Unknown error occurred")
         }
+    }
+
+    private fun logError(tag: String, e: Throwable) {
+        println("[$tag] ${e::class.simpleName}: ${e.message}")
+        e.printStackTrace()
     }
 }
 

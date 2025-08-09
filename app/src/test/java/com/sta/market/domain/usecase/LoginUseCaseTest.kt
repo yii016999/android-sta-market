@@ -4,7 +4,7 @@ import com.sta.market.TestConstants.TEST_EMAIL
 import com.sta.market.TestConstants.TEST_LOCKED_EMAIL
 import com.sta.market.TestConstants.TEST_PASSWORD
 import com.sta.market.TestConstants.TEST_TOKEN
-import com.sta.market.TestConstants.TEST_WRONG_EMAIL
+import com.sta.market.TestConstants.TEST_WRONG_FORMATE_EMAIL
 import com.sta.market.TestConstants.TEST_WRONG_PASSWORD
 import com.sta.market.domain.model.AccountLockedException
 import com.sta.market.domain.model.LoginReq
@@ -69,13 +69,13 @@ class LoginUseCaseTest {
     @Test
     fun `login with UnauthorizedException returns InvalidCredentials`() = runTest {
         // Given
-        val loginReq = LoginReq(TEST_WRONG_EMAIL.trim(), TEST_WRONG_PASSWORD)
+        val loginReq = LoginReq(TEST_WRONG_FORMATE_EMAIL.trim(), TEST_WRONG_PASSWORD)
 
         coEvery { loginRepository.login(loginReq) } throws
                 UnauthorizedException("Invalid credentials")
 
         // When
-        val result = loginUseCase(TEST_WRONG_EMAIL, TEST_WRONG_PASSWORD)
+        val result = loginUseCase(TEST_WRONG_FORMATE_EMAIL, TEST_WRONG_PASSWORD)
 
         // Then
         assertTrue("Should return InvalidCredentials", result is LoginResult.InvalidCredentials)
